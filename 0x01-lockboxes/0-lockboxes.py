@@ -4,23 +4,16 @@
 
 def canUnlockAll(boxes):
     ''' checking if lockboxes can be opened '''
-    # Initialize a set to keep track of visited boxes
-    visited = set()
+    n = len(boxes)
+    seen_boxes = set([0])
+    unseen_boxes = set(boxes[0]).difference(set([0]))
+    while len(unseen_boxes) > 0:
+        box_idx = unseen_boxes.pop()
+        if not box_idx or box_idx >= n or box_idx < 0:
+            continue
 
-    # DFS function to explore the boxes
-    def dfs(box_index):
-        # Mark the current box as visited
-        visited.add(box_index)
+        if box_idx not in seen_boxes:
+            unseen_boxes = unseen_boxes.union(boxes[box_idx])
+            seen_boxes.add(box_idx)
 
-        # Explore keys in the current box
-        for key in boxes[box_index]:
-            # If the key opens a box and the box has not been visited,
-            # recursively call DFS
-            if key < len(boxes) and key not in visited:
-                dfs(key)
-
-    # Start DFS from the first box (boxes[0])
-    dfs(0)
-
-    # Check if all boxes have been visited
-    return len(visited) == len(boxes)
+    return n == len(seen_boxes)
